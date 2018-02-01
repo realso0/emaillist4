@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="emaillist">
+	<select id="getList" resultType="EmaillistVo"> <!-- emaillistVo 형태가 여러개 출력되는 구조, 경로는 정확하게 -->
+		<![CDATA[ 
+			select no, last_name "lastName", first_name "firstName", email
+			from emaillist
+			order by no desc
+        ]]> <!-- 쿼리문을 태그가 아니라 문자열로만 봐달라 -->
+	</select> <!--vo 멤버변수 이름과 db변수 이름과 동일하게 해주어야 값을 set 시킬수 있음 -->
+				<!-- db값을 출력해주는 것이므로, db이름을 Vo이름으로 바꿔주는 과정이 필요 -->
+
+	<insert id="insert" parameterType="EmaillistVo"> <!-- parameterType은 입력받는 값으로 클래스이름을 적어줌. -->
+		<![CDATA[ 
+			insert into emaillist
+			values (seq_emaillist_no.nextval, #{lastName}, #{firstName}, #{email}) 
+		]]> <!-- 이전에 쓰던 물음표(?) 대신에 Vo의 멤버변수로 이름을 적어준다. -->
+	</insert> <!-- db에 입력하는 것이므로, Vo의 멤버변수이름만 입력해도 db에서 인식함 -->
+	
+	<select id="getListByMap" parameterType="map" resultType="com.javaex.vo.EmaillistVo">
+		<![CDATA[
+			select no, last_name lastName, first_name firstName, email
+			from emaillist 
+			where last_name = #{last_name}
+			or email = #{email}
+		]]> <!-- map의 키로 꺼내서(#{last_name}) 값으로 뿌려주는 것 -->
+	</select>
+</mapper>
